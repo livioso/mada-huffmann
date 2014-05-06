@@ -6,9 +6,9 @@ public class HuffmannCLI {
 	public static void main(String[] args) {
 		Huffmann huffmann = new Huffmann();
 		try {
-			huffmann.createFrequencyMap("/Users/livio/Desktop/input.txt");
-			huffmann.sortFrequenceMap();
-			//huffmann.createHuffmanEncoding();
+			huffmann.initializeUnsortedFrequencyMap("/Users/livio/Desktop/input.txt");
+			huffmann.initializeSortedFrequencyMap();
+			huffmann.initializeHuffmannTree();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
