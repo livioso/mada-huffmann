@@ -8,7 +8,7 @@ public class HuffmannCLI {
 		try {
 			huffmann.createFrequencyMap("/Users/livio/Desktop/input.txt");
 			huffmann.sortFrequenceMap();
-			huffmann.createHuffmanEncoding();
+			//huffmann.createHuffmanEncoding();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
