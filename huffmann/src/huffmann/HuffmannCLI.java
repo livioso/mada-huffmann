@@ -9,6 +9,7 @@ public class HuffmannCLI {
 			huffmann.initializeUnsortedFrequencyMap("/Users/livio/Desktop/input.txt");
 			huffmann.initializeSortedFrequencyMap();
 			huffmann.initializeHuffmannTree();
+			huffmann.encodeToFile("output.dat");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
