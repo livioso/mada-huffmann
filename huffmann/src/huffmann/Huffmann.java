@@ -1,8 +1,11 @@
 package huffmann;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +21,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 
 public class Huffmann {
 	
@@ -50,6 +54,7 @@ public class Huffmann {
 	private ArrayList<HuffmannNode> SortedList = new ArrayList<>();
 	/** Map that holds the Huffmann encoding for each character */
 	private Map<Character, String> characterHuffmannTree = new HashMap<>();
+	private String bitStringResulting = "";
 	
 	/** */
 	public void initializeUnsortedFrequencyMap (String pathOfFileToEncode) throws IOException {
@@ -160,8 +165,6 @@ public class Huffmann {
 	@SuppressWarnings("resource")
 	public void encodeToFile(String outputFilePath) throws FileNotFoundException {
 		
-		String bitStringResulting = "";
-		
 		try {
 			FileInputStream fileInput = new FileInputStream(inputFile);
 			Integer readChar = 0;
@@ -184,12 +187,105 @@ public class Huffmann {
 			String temp = bitStringResulting.substring(i * 8, (i+1) * 8);
 			bitStringAsByteArray[i] = (byte) Integer.parseInt(temp, 2);
 		}
-		
 	     FileOutputStream fos = new FileOutputStream("output.dat");
 	     try {
 			fos.write(bitStringAsByteArray);
 			fos.close();
 		} catch (IOException e) {
 		}
+	}
+	
+	private Map<Character, String> createEncodingMap(String keyFile) throws IOException {
+		
+		File fileKey = new File(keyFile);
+	    BufferedReader fisKey = new BufferedReader(new FileReader(keyFile));
+	    String decodeKey = "";
+	    
+	    try {
+	    	StringBuilder sb = new StringBuilder();
+	        String line = fisKey.readLine();
+	        
+	        while (line != null) {
+	            sb.append(line);
+	            line = fisKey.readLine();
+	        }
+	        decodeKey = sb.toString();
+	        fisKey.close();
+	        
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    Map<Character, String> encodingMap = new TreeMap<>();
+	    String[] splittedDecodeKey = decodeKey.split("-");
+	    
+	    for (int i = 0; i < splittedDecodeKey.length; i++) {
+	    	encodingMap.put(splittedDecodeKey[i].substring(0, 1).toCharArray()[0], 
+	    			splittedDecodeKey[i].substring(2, splittedDecodeKey[i].length()));
+		}
+		
+		return encodingMap;
+		
+	}
+	
+	private String createBitString(String encodedFile) throws IOException {
+		File FileEncoded = new File(encodedFile);
+	    BufferedReader encKey = new BufferedReader(new FileReader(FileEncoded));
+	    String encodedText = "";
+	    
+	    try {
+	    	StringBuilder sb = new StringBuilder();
+	        String line = encKey.readLine();
+	        
+	        while (line != null) {
+	            sb.append(line);
+	            line = encKey.readLine();
+	        }
+	        encodedText = sb.toString();
+	        encKey.close();
+	        
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    return bitStringResulting;
+	}
+	
+	public void decodeFile(String encodedFile, String keyFile) throws IOException {
+		
+		Map<Character, String> encodingMap = this.createEncodingMap(keyFile);
+		
+	    String encodedText = createBitString(encodedFile);
+	    encodedText = encodedText.substring(0, encodedText.lastIndexOf('1'));
+	    	    
+	    String decodedText = "";
+	    String tempSearchQuery = "";
+	    int treeCounter = 1;
+
+	    while(encodedText.length() > 1) {
+	    	for (Map.Entry<Character, String> each: encodingMap.entrySet()) {
+	    		tempSearchQuery = encodedText.substring(0, treeCounter);
+	    		
+		    	if (each.getValue().equals(tempSearchQuery)) {
+		    		encodedText = encodedText.substring(tempSearchQuery.length(), encodedText.length());
+		    		decodedText += each.getKey();
+		    		treeCounter = 0;
+				}
+		    }
+			treeCounter++;
+	    }
+	    
+	    System.out.println(decodedText);
+	    
+	    
+	    
 	}
 }
