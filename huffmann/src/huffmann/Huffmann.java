@@ -1,7 +1,10 @@
 package huffmann;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,39 +17,33 @@ import java.util.TreeMap;
 
 public class Huffmann {
 	
-	/** The used TreeMap (an implementation of a SortedMap) does 
-	 *  the sorting for us; however we need to sort by value and
-	 *  not by key (because we want to sort by the frequency (value)
-	 *  of a character (key) => thus we have our own fancy comparator. */
-	class CharacterValueComparator implements Comparator<Integer> {
-	    Map<Integer, Integer> mapUnderComparison;
-	    
-	    public CharacterValueComparator(Map<Integer, Integer> mapUnderComparison) {
-	    	// this is definitely a bit ugly as we have now 
-	    	// a dependency to the map and vice versa. :(
-	    	this.mapUnderComparison = mapUnderComparison;
-	    }
-	    
-	    /** We need a ascending order so do that => least used characters 
-	     *  in the beginning of the map and most used at the end as we build 
-	     *  the map from the ground to the top ('bottom up') */ 
-	    public int compare(Integer lhsCharacter, Integer rhsCharacter) {
-	        return mapUnderComparison.get(lhsCharacter) >= 
-	        	   mapUnderComparison.get(rhsCharacter) ? 1 : -1;
-	    }
+	public class HuffmannNode implements Comparable<HuffmannNode> {
+		Integer EncodedCharacter = -1;
+		String HuffmannEncoding = ""; 
+		
+		Integer Weight;
+		List<HuffmannNode> children = new ArrayList<>();
+		
+		public Character getEncodedCharacterAsChar() {
+			return (char) EncodedCharacter.intValue();
+		}
+		
+		@Override
+		public int compareTo(HuffmannNode o) {
+			return this.Weight.compareTo(o.Weight);
+		}
+		
+		@Override
+		public String toString () {
+			return "(" + getEncodedCharacterAsChar() + 
+					", " + Weight + ", " + HuffmannEncoding + ") ";
+		}
 	}
 	
-	/** This map */ 
 	private Map<Integer, Integer> characterFrequencMapUnsorted = new HashMap<>();
-	private CharacterValueComparator comp = new CharacterValueComparator(characterFrequencMapUnsorted);
-	private SortedMap<Integer, Integer> characterFrequencMapSorted = new TreeMap<>(comp);
-	
-	ArrayList<HuffmannNode> SortedList = new ArrayList<>();
-	
-	
-	
+	private ArrayList<HuffmannNode> SortedList = new ArrayList<>();
 	/** Map that holds the Huffmann encoding for each character */
-	private Map<String, String> characterHuffmannTree = new HashMap<>();
+	private Map<Character, String> characterHuffmannTree = new HashMap<>();
 	
 	/** */
 	public void initializeUnsortedFrequencyMap (String pathOfFileToEncode) throws IOException {
@@ -78,7 +75,34 @@ public class Huffmann {
 	}
 
 	public void initializeHuffmannTree() {
+		createHuffmannTree();
+		cleanUpHuffmannTree();
+		writeHuffmannTreeToFile("dec_tab.txt");
+	}
+
+	private void writeHuffmannTreeToFile(String path) {
 		
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(path, "UTF-8");
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+
+		}
+		
+		String completeEncoding = "";
+		for(Map.Entry<Character, String> each : characterHuffmannTree.entrySet()) {
+			completeEncoding = completeEncoding + each.getKey() + ":" + each.getValue() + "-";
+		}
+		
+		// remove trailing '-'
+		completeEncoding = completeEncoding.substring(0, completeEncoding.length() - 1);
+		
+		// write the encoding to the file
+		writer.write(completeEncoding);
+		writer.close();
+	}
+
+	private void createHuffmannTree() {
 		while(SortedList.size() > 1) {
 			// this works because the map is sorted so the two first 
 			// entries are also the ones with the least occurrence :-)
@@ -113,27 +137,18 @@ public class Huffmann {
 			SortedList.remove(0);
 			SortedList.remove(0);
 		}
-		
-		System.out.print(SortedList.get(0).children);
-		
 	}
 	
-	public class HuffmannNode implements Comparable<HuffmannNode> {
-		Integer EncodedCharacter = -1;
-		String HuffmannEncoding = ""; 
+	private void cleanUpHuffmannTree() {
+		// there should be only the root note left
+		assert(SortedList.size() == 1);
 		
-		Integer Weight;
-		List<HuffmannNode> children = new ArrayList<>();
+		HuffmannNode root = SortedList.get(0);
 		
-		@Override
-		public int compareTo(HuffmannNode o) {
-			return this.Weight.compareTo(o.Weight);
-		}
-		
-		@Override
-		public String toString () {
-			return "(" + Character.toString((char) EncodedCharacter.intValue()) + 
-					", " + Weight + ", " + HuffmannEncoding + ") ";
+		for(HuffmannNode each : root.children) {
+			if(each.EncodedCharacter != -1) {
+				characterHuffmannTree.put(each.getEncodedCharacterAsChar(), each.HuffmannEncoding);
+			}
 		}
 	}
 }
