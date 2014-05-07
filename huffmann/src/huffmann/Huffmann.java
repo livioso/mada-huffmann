@@ -266,9 +266,7 @@ public class Huffmann {
 	    String decodedText = "";
 	    String tempSearchQuery = "";
 	    int treeCounter = 1;
-	    System.out.println("encodingMap");
-	    System.out.println(encodingMap);
-	   
+
 	    while(encodedText.length() > 1) {
 	    	for (Entry<Integer, String> each: encodingMap.entrySet()) {
 	    		tempSearchQuery = encodedText.substring(0, treeCounter);
@@ -280,5 +278,22 @@ public class Huffmann {
 		    }
 			treeCounter++;
 	    }
+	    
+	    PrintWriter writer = new PrintWriter("decompress.txt", "UTF-8");
+	    writer.println(decodedText);
+	    // TODO: remove trailing newline
+	    writer.close();
+	    
+	}
+	
+	public void analyzeFileSizes(String inputFile, String decompressFile) {
+		File fileInput = new File(inputFile);
+		File fileDecompress = new File(decompressFile);
+		double savedPercentage = (100.0 / fileInput.length()) * fileDecompress.length();
+		savedPercentage = (double)Math.round(savedPercentage * 100) / 100;
+		
+		System.out.println("Laenge des urspruenglichen Textes: " + fileInput.length());
+		System.out.println("Laenge des komprimierten Textes: " + fileDecompress.length());
+		System.out.println("Prozentualer Unterschied: " + savedPercentage + "%");
 	}
 }

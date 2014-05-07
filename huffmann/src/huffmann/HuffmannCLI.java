@@ -11,6 +11,7 @@ public class HuffmannCLI {
 			huffmann.initializeHuffmannTree();
 			huffmann.encodeToFile("output.dat");
 			huffmann.decodeFile("output.dat", "dec_tab.txt");
+			huffmann.analyzeFileSizes("input.txt", "output.dat");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
