@@ -93,6 +93,9 @@ public class Huffmann {
 			characterFrequencMapUnsorted.put(character, countCharacter + 1);
 		}
 		
+		System.out.println("Characters with frequency (as Integers):");
+		System.out.println(characterFrequencMapUnsorted);
+		
 		fileInput.close();
 	}
 	
@@ -191,12 +194,18 @@ public class Huffmann {
 		assert(SortedList.size() == 1);
 		
 		HuffmannNode root = SortedList.get(0);
+		System.out.println("\nHuffmann tree:");
+		
 		for(HuffmannNode each : root.children) {
 			if(each.EncodedCharacter != -1) {
 				// add only real characters but no intersections
 				characterHuffmannTree.put(each.getEncodedCharacterAsInt(), each.HuffmannEncoding);
 			}
+			
+			System.out.println(each);
 		}
+		
+		
 	}
 	
 	/** Write the resulting huffmann encoding to a file 
@@ -259,9 +268,15 @@ public class Huffmann {
 	     FileOutputStream fos = new FileOutputStream("output.dat");
 	     try {
 			fos.write(bitStringAsByteArray);
+		FileOutputStream fos = new FileOutputStream("output.dat");
+	    try {
+	    	fos.write(bitStringAsByteArray);
 			fos.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	    
+	    
 	}
 	
 	/** Decodes a file given in the encoded and the used huffmann encoding */ 
@@ -342,6 +357,9 @@ public class Huffmann {
 	    	encodingMap.put(Integer.parseInt(items[0]), items[1]); 
 		}
 		
+	    System.out.println("\nEncodingMap as bitstrings:");
+	    System.out.println(encodingMap);
+	    
 		return encodingMap;
 	}
 	
@@ -367,7 +385,7 @@ public class Huffmann {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	    
 	    return bitStringResulting;
 	}
 	
@@ -378,9 +396,10 @@ public class Huffmann {
 		double savedPercentage = (100.0 / fileInput.length()) * fileDecompress.length();
 		savedPercentage = (double)Math.round(savedPercentage * 100) / 100;
 		
-		System.out.println("Laenge des urspruenglichen Textes: " + fileInput.length());
-		System.out.println("Laenge des komprimierten Textes: " + fileDecompress.length());
-		System.out.println("Prozentualer Unterschied: " + savedPercentage + "%");
+		System.out.println("\nFilesize analysis");
+		System.out.println("Length of original text: " + fileInput.length());
+		System.out.println("Length of compressed text: " + fileDecompress.length());
+		System.out.println("Percental difference: " + savedPercentage + "%");
 	}
 }
 
