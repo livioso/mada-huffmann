@@ -200,9 +200,13 @@ public class Huffmann {
 	        
 	        while (line != null) {
 	            sb.append(line);
+	            sb.append('\n');
 	            line = fisKey.readLine();
 	        }
 	        decodeKey = sb.toString();
+	        
+	        decodeKey = decodeKey.substring(0, decodeKey.lastIndexOf('\n'));
+	        
 	        fisKey.close();
 	        
 		} catch (FileNotFoundException e) {
@@ -212,6 +216,9 @@ public class Huffmann {
 		}
 	    
 	    Map<Character, String> encodingMap = new TreeMap<>();
+	    
+	    System.out.println(decodeKey);
+	    
 	    String[] splittedDecodeKey = decodeKey.split("-");
 	    
 	    for (int i = 0; i < splittedDecodeKey.length; i++) {
@@ -251,7 +258,7 @@ public class Huffmann {
 	
 	public void decodeFile(String encodedFile, String keyFile) throws IOException {
 		
-		Map<Character, String> encodingMap = this.createEncodingMap(keyFile);
+		Map<Character, String> encodingMap = createEncodingMap(keyFile);
 		
 	    String encodedText = createBitString(encodedFile);
 	    encodedText = encodedText.substring(0, encodedText.lastIndexOf('1'));
