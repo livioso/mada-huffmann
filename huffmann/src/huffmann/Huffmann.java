@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.List;
 import java.util.TreeMap;
 
-
 public class Huffmann {
 	
 	public class HuffmannNode implements Comparable<HuffmannNode> {
@@ -116,6 +115,7 @@ public class Huffmann {
 			HuffmannNode leastOccuringCharacter = SortedList.get(0);
 			HuffmannNode secondLeastOccuringCharacter = SortedList.get(1);
 			
+			// append a 0 to the left side of the tree append a
 			leastOccuringCharacter.HuffmannEncoding = "0" + leastOccuringCharacter.HuffmannEncoding;
 			secondLeastOccuringCharacter.HuffmannEncoding = "1" + secondLeastOccuringCharacter.HuffmannEncoding;
 			
@@ -191,7 +191,6 @@ public class Huffmann {
 	
 	private Map<Character, String> createEncodingMap(String keyFile) throws IOException {
 		
-		File fileKey = new File(keyFile);
 	    BufferedReader fisKey = new BufferedReader(new FileReader(keyFile));
 	    String decodeKey = "";
 	    
@@ -207,10 +206,8 @@ public class Huffmann {
 	        fisKey.close();
 	        
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    
@@ -226,6 +223,7 @@ public class Huffmann {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private String createBitString(String encodedFile) throws IOException {
 		File FileEncoded = new File(encodedFile);
 	    BufferedReader encKey = new BufferedReader(new FileReader(FileEncoded));
@@ -243,10 +241,8 @@ public class Huffmann {
 	        encKey.close();
 	        
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -263,6 +259,8 @@ public class Huffmann {
 	    String decodedText = "";
 	    String tempSearchQuery = "";
 	    int treeCounter = 1;
+	    
+	    System.out.println(encodingMap.get('\n'));
 
 	    while(encodedText.length() > 1) {
 	    	for (Map.Entry<Character, String> each: encodingMap.entrySet()) {
@@ -278,8 +276,5 @@ public class Huffmann {
 	    }
 	    
 	    System.out.println(decodedText);
-	    
-	    
-	    
 	}
 }
