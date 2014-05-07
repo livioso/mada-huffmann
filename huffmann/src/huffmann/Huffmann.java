@@ -268,9 +268,6 @@ public class Huffmann {
 	     FileOutputStream fos = new FileOutputStream("output.dat");
 	     try {
 			fos.write(bitStringAsByteArray);
-		FileOutputStream fos = new FileOutputStream("output.dat");
-	    try {
-	    	fos.write(bitStringAsByteArray);
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
