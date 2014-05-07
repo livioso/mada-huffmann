@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class Huffmann {
@@ -25,8 +26,8 @@ public class Huffmann {
 		Integer Weight;
 		List<HuffmannNode> children = new ArrayList<>();
 		
-		public Character getEncodedCharacterAsChar() {
-			return (char) EncodedCharacter.intValue();
+		public int getEncodedCharacterAsInt() {
+			return EncodedCharacter.intValue();
 		}
 		
 		@Override
@@ -36,7 +37,7 @@ public class Huffmann {
 		
 		@Override
 		public String toString () {
-			return "(" + getEncodedCharacterAsChar() + 
+			return "(" + getEncodedCharacterAsInt() + 
 				   ", " + Weight + ", " + HuffmannEncoding + ") ";
 		}
 	}
@@ -46,7 +47,7 @@ public class Huffmann {
 	private Map<Integer, Integer> characterFrequencMapUnsorted = new HashMap<>();
 	private ArrayList<HuffmannNode> SortedList = new ArrayList<>();
 	/** Map that holds the Huffmann encoding for each character */
-	private Map<Character, String> characterHuffmannTree = new HashMap<>();
+	private Map<Integer, String> characterHuffmannTree = new HashMap<>();
 	private String bitStringResulting = "";
 	
 	/** */
@@ -96,7 +97,7 @@ public class Huffmann {
 		}
 		
 		String completeEncoding = "";
-		for(Map.Entry<Character, String> each : characterHuffmannTree.entrySet()) {
+		for(Entry<Integer, String> each : characterHuffmannTree.entrySet()) {
 			completeEncoding = completeEncoding + each.getKey() + ":" + each.getValue() + "-";
 		}
 		
@@ -151,7 +152,7 @@ public class Huffmann {
 		
 		for(HuffmannNode each : root.children) {
 			if(each.EncodedCharacter != -1) {
-				characterHuffmannTree.put(each.getEncodedCharacterAsChar(), each.HuffmannEncoding);
+				characterHuffmannTree.put(each.getEncodedCharacterAsInt(), each.HuffmannEncoding);
 			}
 		}
 	}
@@ -163,7 +164,7 @@ public class Huffmann {
 			FileInputStream fileInput = new FileInputStream(inputFile);
 			Integer readChar = 0;
 			while((readChar = fileInput.read()) != -1) {
-				String encoding = characterHuffmannTree.get((char)readChar.intValue());
+				String encoding = characterHuffmannTree.get(readChar.intValue());
 				bitStringResulting += encoding;
 				}
 			} catch (IOException e) {
@@ -189,7 +190,7 @@ public class Huffmann {
 		}
 	}
 	
-	private Map<Character, String> createEncodingMap(String keyFile) throws IOException {
+	private Map<Integer, String> createEncodingMap(String keyFile) throws IOException {
 		
 	    BufferedReader fisKey = new BufferedReader(new FileReader(keyFile));
 	    String decodeKey = "";
@@ -215,15 +216,14 @@ public class Huffmann {
 			e.printStackTrace();
 		}
 	    
-	    Map<Character, String> encodingMap = new TreeMap<>();
-	    
-	    System.out.println(decodeKey);
+	    Map<Integer, String> encodingMap = new TreeMap<>();
 	    
 	    String[] splittedDecodeKey = decodeKey.split("-");
 	    
+	    
 	    for (int i = 0; i < splittedDecodeKey.length; i++) {
-	    	encodingMap.put(splittedDecodeKey[i].substring(0, 1).toCharArray()[0], 
-	    			splittedDecodeKey[i].substring(2, splittedDecodeKey[i].length()));
+	    	String[] items = splittedDecodeKey[i].split(":");
+	    	encodingMap.put(Integer.parseInt(items[0]), items[1]); 
 		}
 		
 		return encodingMap;
@@ -258,7 +258,7 @@ public class Huffmann {
 	
 	public void decodeFile(String encodedFile, String keyFile) throws IOException {
 		
-		Map<Character, String> encodingMap = createEncodingMap(keyFile);
+		Map<Integer, String> encodingMap = createEncodingMap(keyFile);
 		
 	    String encodedText = createBitString(encodedFile);
 	    encodedText = encodedText.substring(0, encodedText.lastIndexOf('1'));
@@ -266,22 +266,19 @@ public class Huffmann {
 	    String decodedText = "";
 	    String tempSearchQuery = "";
 	    int treeCounter = 1;
-	    
-	    System.out.println(encodingMap.get('\n'));
-
+	    System.out.println("encodingMap");
+	    System.out.println(encodingMap);
+	   
 	    while(encodedText.length() > 1) {
-	    	for (Map.Entry<Character, String> each: encodingMap.entrySet()) {
+	    	for (Entry<Integer, String> each: encodingMap.entrySet()) {
 	    		tempSearchQuery = encodedText.substring(0, treeCounter);
-	    		
 		    	if (each.getValue().equals(tempSearchQuery)) {
 		    		encodedText = encodedText.substring(tempSearchQuery.length(), encodedText.length());
-		    		decodedText += each.getKey();
+		    		decodedText += Character.toChars(each.getKey())[0];
 		    		treeCounter = 0;
 				}
 		    }
 			treeCounter++;
 	    }
-	    
-	    System.out.println(decodedText);
 	}
 }
