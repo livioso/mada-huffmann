@@ -362,28 +362,29 @@ public class Huffmann {
 	
 	/** Simply reads the full encoded file entry content and return it as a string. */
 	private String createBitString(String encodedFile) throws IOException {
-		File FileEncoded = new File(encodedFile);
-	    BufferedReader encKey = new BufferedReader(new FileReader(FileEncoded));
-	    String encodedText = "";
-	    
-	    try {
-	    	StringBuilder sb = new StringBuilder();
-	        String line = encKey.readLine();
-	        
-	        while (line != null) {
-	            sb.append(line);
-	            line = encKey.readLine();
-	        }
-	        encodedText = sb.toString();
-	        encKey.close();
-	        
+		 File file = new File("output.dat");
+		 byte[] bFile = new byte[(int)file.length()];
+		 FileInputStream fis = new FileInputStream(file);
+		 String encodedBitString = "";
+		 
+		 try {
+			 fis.read(bFile);
+			 fis.close();
+			 StringBuffer buffer = new StringBuffer();
+			 for(int i=0; i<bFile.length;i++){
+				 String substring = String.format("%8s", Integer.toBinaryString(bFile[i] & 0xFF)).replace(' ', '0');
+				 buffer.append(substring);
+			 }
+			 String newString = buffer.toString();
+			 encodedBitString = newString;
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    
-	    return bitStringResulting;
+
+	    return encodedBitString;
 	}
 	
 	/** Small analysis function to find out how much space has been saved etc. */
