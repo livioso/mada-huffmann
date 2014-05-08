@@ -200,9 +200,8 @@ public class Huffmann {
 			if(each.EncodedCharacter != -1) {
 				// add only real characters but no intersections
 				characterHuffmannTree.put(each.getEncodedCharacterAsInt(), each.HuffmannEncoding);
+				System.out.println(each);
 			}
-			
-			System.out.println(each);
 		}
 		
 		
