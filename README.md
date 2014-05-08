@@ -2,23 +2,18 @@ mada: huffmann tree
 =================
 ---
 
+#### Author: Livio Bieri, Marius Küng and _______
+
 ### Example execution
 ###### When using the following input file `input.txt`
 
 ``` 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 ```
 ###### The program output looks like this:
 ```
 Characters with frequency (as Integers):
-{68=1, 69=1, 10=5, 76=1, 85=1, 32=63, 97=29, 98=3, 99=16, 100=18, 
-101=37, 102=3, 103=3,104=1, 105=43, 108=21, 44=4, 109=17, 110=24, 
-46=4, 111=29, 112=11, 113=5, 114=22, 115=18, 116=32, 117=28, 118=3, 120=3}
+{68=1, 69=1, 10=5, 76=1, 85=1, 32=63, 97=29, 98=3, 99=16, 100=18, 101=37, 102=3, 103=3,104=1, 105=43, 108=21, 44=4, 109=17, 110=24, 46=4, 111=29, 112=11, 113=5, 114=22, 115=18, 116=32, 117=28, 118=3, 120=3}
 
 Huffmann tree:
 (101, 37, 0000) 
